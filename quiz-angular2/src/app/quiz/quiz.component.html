@@ -1,0 +1,45 @@
+<div id="quiz">
+  <h1 class="text-sm-center">Welcome Robert Ferraro</h1>
+  <hr />
+
+  <div *ngIf="mode=='quiz' && quiz">
+    <div class="row float-right">
+          Step {{pager.index + 1}} of {{pager.count}}
+    </div>
+    <div class="clearfix"></div>
+    <div *ngFor="let question of filteredQuestions;" class="row">
+
+      <h2><span [innerHTML]="question.name"></span></h2>
+
+      <div class="col-md-12" *ngFor="let option of question.options">
+        <div class="checkbox">
+          <label [attr.for]="option.id">
+            <input id="{{option.id}}" type="checkbox" [(ngModel)]="option.selected" (change)="onSelect(question, option);" /> {{option.name}}
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <button class="btn btn-default" *ngIf="pager.index > 0" (click)="goTo(pager.index - 1);">Prev</button>
+      <button class="btn btn-default" *ngIf="pager.index+1 < pager.count" (click)="goTo(pager.index + 1);">Next</button>
+      <button class="btn btn-primary" *ngIf="pager.index+1 === pager.count" (click)="onSubmit();">Submit Quiz</button>
+    </div>
+  </div>
+
+  <div class="result" *ngIf="mode=='result'">
+    <h2>Quiz Result</h2>
+    <div *ngFor="let question of quiz.questions; let index = index">
+      <div class="result-question">
+        <h4>{{index + 1}}. {{question.name}}</h4>
+        <div class="row">
+          <div class="col-md-6" *ngFor="let Option of question.options">
+            <input id="{{Option.id}}" type="checkbox" disabled="disabled" [(ngModel)]="Option.selected" /> {{Option.name}}
+          </div>
+        </div>
+        <div class="alert {{ isCorrect(question) == 'correct'? 'alert-success': 'alert-danger'}}">Your answer is {{isCorrect(question)}}.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
